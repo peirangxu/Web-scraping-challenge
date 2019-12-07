@@ -23,10 +23,11 @@
         <h6>{{  mars_data.news_p  }}</h6>
       </div>
     </div>
+    <br>
     <div class="row">
       <div class="col-lg-8">
         <h2>Featured Mars Image</h2>
-        <img src="{{  mars_data.featured_image_url  }}" alt="Mars Space Image">
+        <img src="{{  mars_data.featured_image_url  }}" alt="Mars Space Image" height="600" width="750">
       </div>
       <div class= "col-lg-4">
         <div class="card" style="width: 25rem;">
@@ -35,14 +36,55 @@
             <p class="card-text">{{  mars_data.mars_weather  }}</p>
           </div>
         </div>
+        <br>
+        <br>
         <h3>Mars Facts</h3>
         {{  mars_data.mars_facts | safe  }}
       </div>
       </div>
 
   <!-- Mars Hemisphere -->
-      <div class="row">
-        <div class="col-lg-12"></div>
+      <div class="jumbotron text-center">
+        <div class="row">
+          <div class="col-lg-12">
+            <h2>Mars Hemispheres</h2>
+            <hr>
+            <br>
+            <div class="card-deck">
+                <div class="card">
+                    <img src="{{  mars_data.hemisphere_image_urls[0]["img_url"]  }}" alt="Cerberus" height="450">
+                    <div class="card-body">
+                      <h5 class="card-title">Cerberus Hemisphere</h5>
+                    </div>
+                  </div>
+                 
+                  <div class="card">
+                      <img src="{{  mars_data.hemisphere_image_urls[1]["img_url"]  }}" alt="Schiaparelli" height="450">
+                      <div class="card-body">
+                        <h5 class="card-title">Schiaparelli Hemisphere</h5>
+                      </div>
+                    </div>
+            </div>
+            <br>
+            <br>
+            <div class="card-deck">
+                <div class="card">
+                    <img src="{{  mars_data.hemisphere_image_urls[2]["img_url"]  }}" alt="Syrtis Major" height="450">
+                    <div class="card-body">
+                      <h5 class="card-title">Syrtis Major</h5>
+                    </div>
+                  </div>
+                 
+                  <div class="card">
+                      <img src="{{  mars_data.hemisphere_image_urls[3]["img_url"]  }}" alt="Valles Marineris" height="450">
+                      <div class="card-body">
+                        <h5 class="card-title">Valles Marineris Hemisphere</h5>
+                      </div>
+                    </div>
+            </div>
+            
+          </div>
+        </div>
       </div>
   </div>
 </body>

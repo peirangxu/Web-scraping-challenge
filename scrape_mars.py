@@ -18,14 +18,11 @@ def scrape():
     response = requests.get(url)
     soup = BeautifulSoup(response.text,"html.parser")
 
-    results = soup.find_all('div', class_='slide')
+    news_title = soup.find('div',class_='content_title').a.text.strip()
+    news_p = soup.find('div', class_='rollover_description_inner').text.strip()
 
-    for result in results:
-        news_title = result.find('div', class_='content_title').a.text.strip()
-        news_p = result.find('div', class_='rollover_description_inner').text.strip()
-    
-        mars_data["news_title"] = news_title
-        mars_data["news_p"] = news_p
+    mars_data["news_title"] = news_title
+    mars_data["news_p"] = news_p
 
     #JPL Mars Space Images - Featured Image
     browser = init_browser()
@@ -38,8 +35,13 @@ def scrape():
     html = browser.html
     soup = BeautifulSoup(html, "html.parser")
 
-    featured_image_url = soup.find('img', title='Indus Vallis')['src']
-    mars_data["featured_image_url"] = f"https://www.jpl.nasa.gov{featured_image_url}"
+    featured_image_url = soup.find('div', class_='carousel_items')
+    featured_image_url = featured_image_url.article["style"].split("(")[1]
+    featured_image_url = featured_image_url.split(")")[0]
+    featured_image_url = featured_image_url.split("'")[1]
+    featured_image_url = featured_image_url.split("'")[0]
+    featured_image_url = "https://www.jpl.nasa.gov"+featured_image_url
+    mars_data["featured_image_url"] = featured_image_url
 
     browser.quit()
 
@@ -49,10 +51,10 @@ def scrape():
     response_weather = requests.get(url_weather)
     soup = BeautifulSoup(response_weather.text, "html.parser")
 
-    results = soup.find_all('p', class_="TweetTextSize")
+    result = soup.find('p', class_="TweetTextSize").text
+    mars_weather = result.split("Papic")[0]
 
-    for result in results:
-        mars_data["mars_weather"] = result.text
+    mars_data["mars_weather"] = mars_weather
     
     #Mars Facts
     url_facts = "https://space-facts.com/mars/"
@@ -78,15 +80,16 @@ def scrape():
     for result in results:
         url_high_resolution.append(result.a['href'])
 
+    hemisphere_image_urls = []
     for i in url_high_resolution:
         response = requests.get(f"https://astrogeology.usgs.gov{i}")
         soup = BeautifulSoup(response.text, "html.parser")
     
         title = soup.find('h2', class_='title').text
         img_url = soup.find('li').a['href']
+        hemisphere_image_urls.append({"title":title,"img_url":img_url})
 
-        mars_data["hemisphere_image_title"] = title
-        mars_data["hemisphere_image_url"] = img_url
+        mars_data["hemisphere_image_urls"] = hemisphere_image_urls
 
     # Return results
     return mars_data
