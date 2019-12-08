@@ -14,15 +14,23 @@ def scrape():
     mars_data = {}
 
     #mars news
+    browser = init_browser()
     url = "https://mars.nasa.gov/news/"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text,"html.parser")
+    browser.visit(url)
+
+    time.sleep(1)
+
+    html = browser.html
+
+    soup = BeautifulSoup(html,"html.parser")
 
     news_title = soup.find('div',class_='content_title').a.text.strip()
     news_p = soup.find('div', class_='rollover_description_inner').text.strip()
 
     mars_data["news_title"] = news_title
     mars_data["news_p"] = news_p
+
+    browser.quit()
 
     #JPL Mars Space Images - Featured Image
     browser = init_browser()
@@ -65,6 +73,7 @@ def scrape():
     mars_facts_df = mars_facts_df.set_index('Measure of')
     html_table = mars_facts_df.to_html()
     html_table = html_table.replace("\n","")
+    html_table = html_table.replace("right","left")
 
     mars_data["mars_facts"] = html_table
 
@@ -85,7 +94,7 @@ def scrape():
         response = requests.get(f"https://astrogeology.usgs.gov{i}")
         soup = BeautifulSoup(response.text, "html.parser")
     
-        title = soup.find('h2', class_='title').text
+        title = soup.find('h2', class_='title').text.split("Enhanced")[0]
         img_url = soup.find('li').a['href']
         hemisphere_image_urls.append({"title":title,"img_url":img_url})
 
